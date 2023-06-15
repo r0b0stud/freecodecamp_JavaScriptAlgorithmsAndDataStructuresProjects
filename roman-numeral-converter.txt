@@ -1,0 +1,70 @@
+const obj = [
+    {"roman":"M","arabic":1000},
+    {"roman":"CM","arabic":900},
+    {"roman":"DCCC","arabic":800},
+    {"roman":"DCC","arabic":700},
+    {"roman":"DC","arabic":600},
+    {"roman":"D","arabic":500},
+    {"roman":"CD","arabic":400},
+    {"roman":"CCC","arabic":300},
+    {"roman":"CC","arabic":200},
+    {"roman":"C","arabic":100},
+    {"roman":"XC","arabic":90},
+    {"roman":"LXXX","arabic":80},
+    {"roman":"LXX","arabic":70},
+    {"roman":"LX","arabic":60},
+    {"roman":"L","arabic":50},
+    {"roman":"XL","arabic":40},
+    {"roman":"XXX","arabic":30},
+    {"roman":"XX","arabic":20},
+    {"roman":"X","arabic":10},
+    {"roman":"IX","arabic":9},
+    {"roman":"VIII","arabic":8},
+    {"roman":"VII","arabic":7},
+    {"roman":"VI","arabic":6},
+    {"roman":"V","arabic":5},
+    {"roman":"IV","arabic":4},
+    {"roman":"III","arabic":3},
+    {"roman":"II","arabic":2},
+    {"roman":"I","arabic":1}
+  ];
+
+function convertToRoman(num) {
+  let n = polynomial(num);
+  n.reverse();
+  let s="";
+  for(let i=0;i<n.length;i++)
+  {
+    let found = obj.find(x=>{return x.arabic===n[i]});
+    if(found!==undefined){
+      //found
+      s=found.roman+s;
+    }
+    else{
+      //not found - > 1000
+      let b=n[i]/1000;
+      for(let j=0;j<b;j++)
+      {
+        s=obj.find(x=>{return x.arabic===1000}).roman+s;
+      }
+    }
+  }
+  return s;
+}
+
+function polynomial(num)
+{
+  let arrStart=[];
+  let arrEnd=[];
+  arrStart=num.toString().split("").reverse();
+  let c=0;
+  for(let i=0;i<arrStart.length;i++)
+  {
+    if(i==0){c=1;}else{c*=10;}
+    if(c>0){arrEnd.push(arrStart[i]*c);}
+  }
+  arrEnd.reverse();
+ return arrEnd;
+}
+
+//console.log(convertToRoman(12))

@@ -1,0 +1,79 @@
+let matrix=[
+  { pieceName:"PENNY", pieceValue:0.01 },
+  { pieceName:"NICKEL", pieceValue:0.05 },
+  { pieceName:"DIME", pieceValue:0.1 },
+  { pieceName:"QUARTER", pieceValue:0.25 },
+  { pieceName:"ONE", pieceValue:1 },
+  { pieceName:"FIVE", pieceValue:5 },
+  { pieceName:"TEN", pieceValue:10 },
+  { pieceName:"TWENTY", pieceValue:20 },
+  { pieceName:"ONE HUNDRED", pieceValue:100 }
+]
+let cashInDrawer=0;
+let cashInDrawerAfterChangeArr=0;
+
+function transformArray(arr){
+  return arr.map(item=>{
+    cashInDrawer+=item[1];
+    var found=matrix.find(x=>x.pieceName===item[0]);
+    return({
+      name:item[0],
+      value:item[1],
+      pieceValue:found.pieceValue,
+      nPieces:Math.round(item[1]/found.pieceValue)})
+  }).reverse();
+}
+
+function createChangeArr(obj,valueToCheck){
+  return obj.map(item=>{
+    var quantity=parseInt(valueToCheck/item.pieceValue);
+    if(quantity>=item.nPieces){
+      //take all
+      valueToCheck=(valueToCheck-item.value).toFixed(2);
+      cashInDrawerAfterChangeArr+=item.value;
+      return ([item.name, item.value]);
+    }
+    else{
+      //take based on quantity
+      valueToCheck=(valueToCheck-(item.pieceValue)*quantity).toFixed(2);
+      cashInDrawerAfterChangeArr+=(item.pieceValue)*quantity;
+      return ([item.name, (item.pieceValue)*quantity]);
+    }
+  })
+}
+
+function checkCashRegister(price, cash, cid) {
+  var valueToCheck=(cash-price).toFixed(2);
+  cashInDrawer = 0
+  cashInDrawerAfterChangeArr=0;
+  var change=createChangeArr(transformArray(cid),valueToCheck);
+  if(
+    parseFloat(cashInDrawer.toFixed(2))>parseFloat(valueToCheck)
+    && parseFloat(cashInDrawerAfterChangeArr.toFixed(2))===parseFloat(valueToCheck)
+    ){
+    return {status: "OPEN", change: change.filter(item=>item[1]>0)}
+  }
+  else if(cashInDrawer.toFixed(2)===valueToCheck){
+    return {status: "CLOSED", change: change.reverse()}
+  }
+  else{
+    return {status:"INSUFFICIENT_FUNDS", change:[]};
+  }
+}
+
+//01 - OK!!!
+console.log(checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]))
+
+//02 - OK!!!
+console.log(checkCashRegister(3.26, 100, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]))
+
+//03 - OK!!!
+console.log(checkCashRegister(19.5, 20, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]))
+
+//04 - OK!!!
+console.log(checkCashRegister(19.5, 20, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 1], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]))
+
+//05 - OK!!!
+console.log(checkCashRegister(19.5, 20, [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]))
+
+// console.log(checkCashRegister(5.41, 100, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]))

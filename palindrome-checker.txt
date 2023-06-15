@@ -1,0 +1,54 @@
+const regex = /^[0-9a-zA-Z]+$/;
+function palindrome(str) {
+  str=str.toLowerCase();
+  let arr = [];
+  let arr2=[];
+  let s="";
+  let s1="";
+  arr=str.split("");
+  arr.forEach(function(o)
+  {
+    if(o.match(regex))
+    {
+      s+=o;
+      arr2.push(o);
+    }
+  });
+  arr2.reverse();
+  arr2.forEach(function(o)
+  {
+    s1+=o;
+  });
+  if(s1==s){
+    return true;
+  }
+  return false;
+}
+
+console.log(palindrome("0_0 (: /-\ :) 0-0"));
+
+
+version 2.0
+const regex = /^[0-9a-zA-Z]+$/;
+function palindrome(str) {
+  let string;
+  let stringRev;
+  let arr=str.toLowerCase().split("").map(item => {
+    if(regex.test(item)){
+      string+=item;
+      return item;
+    }
+    return null;
+  }).filter(function(item){
+    if(item != null){return item;}
+  });
+  console.log(arr);
+  arr.reverse();
+  arr.map(item => {
+    stringRev+=item;
+  });
+  if(stringRev==string){return true;}
+  return false;
+}
+
+palindrome("_eye");

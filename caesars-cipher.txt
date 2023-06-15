@@ -1,0 +1,58 @@
+const arr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+const regex = /^[0-9a-zA-Z]+$/;
+function rot13(str) {
+  let arrStr=str.split(" ");
+  let s="";
+  for(let i=0;i<arrStr.length;i++)
+  {
+    if(s!="")
+    {
+      s+=" ";
+    }
+    let arrStr2=arrStr[i].split("");
+      for(let j=0;j<arrStr2.length;j++)
+      {
+        if(!arrStr2[j].match(regex))
+        {
+          s+=arrStr2[j];
+        }
+        else
+        {
+          let index=arr.indexOf(arrStr2[j])-13;
+          if(index<0)
+          {
+            index=26-Math.abs(index);
+          }
+          s+=arr[index];
+        }
+    }
+  }
+  return s;
+}
+
+console.log(rot13("SERR CVMMN!"));
+
+Version 2
+const arr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+const regex = /^[0-9a-zA-Z]+$/;
+const cipher=13;
+const masterIndex=arr.length;
+function rot13(str) {
+  let s="";
+  str.split(" ").forEach(item => {
+    s+=" ";
+    item.split("").forEach(item2 => {
+      if(!regex.test(item2)){
+        s+=item2;
+      }
+      else {
+        let index=arr.indexOf(item2)-cipher;
+        if(index<0){index=masterIndex-Math.abs(index);}
+        s+=arr[index];
+      }
+    });
+  });
+  return s.slice(1,s.length);
+}
+
+console.log(rot13("SERR CVMMN!"));
